@@ -64,7 +64,7 @@ type mockTwoPhaseCommitter struct {
 	*twoPhaseCommitter
 }
 
-func (m *mockTikvStore) Begin()  (kv.Transaction, error){
+func (m *mockTikvStore) Begin() (kv.Transaction, error) {
 	txn, err := m.tikvStore.Begin()
 	if err != nil {
 		return nil, errors.Trace(err)
@@ -72,7 +72,7 @@ func (m *mockTikvStore) Begin()  (kv.Transaction, error){
 	return &mockTransaction{txn.(*tikvTxn)}, nil
 }
 
-func (m *mockTikvStore) BeginWithStartTS(startTS uint64) (kv.Transaction, error){
+func (m *mockTikvStore) BeginWithStartTS(startTS uint64) (kv.Transaction, error) {
 	txn, err := m.tikvStore.BeginWithStartTS(startTS)
 	if err != nil {
 		return nil, errors.Trace(err)
@@ -136,13 +136,13 @@ func (c *mockTwoPhaseCommitter) execute(_ context.Context) (err error) {
 			StartVersion: c.startTS,
 			LockTtl:      c.lockTTL,
 		}, pb.Context{})
-		bo :=  NewBackoffer(context.Background(), PrewriteMaxBackoff)
+		bo := NewBackoffer(context.Background(), PrewriteMaxBackoff)
 		sender := NewRegionRequestSender(c.store.regionCache, c.store.client)
 		loc, err := c.store.GetRegionCache().LocateKey(bo, []byte(k))
 		if err != nil {
 			return err
 		}
-		sender.SendReq(bo, req, loc.Region,readTimeoutShort  )
+		sender.SendReq(bo, req, loc.Region, readTimeoutShort)
 	}
 
 	// commit
@@ -152,13 +152,13 @@ func (c *mockTwoPhaseCommitter) execute(_ context.Context) (err error) {
 			Keys:          [][]byte{[]byte(k)},
 			CommitVersion: c.commitTS,
 		}, pb.Context{})
-		bo :=  NewBackoffer(context.Background(), CommitMaxBackoff)
+		bo := NewBackoffer(context.Background(), CommitMaxBackoff)
 		sender := NewRegionRequestSender(c.store.regionCache, c.store.client)
 		loc, err := c.store.GetRegionCache().LocateKey(bo, []byte(k))
 		if err != nil {
 			return err
 		}
-		sender.SendReq(bo, req, loc.Region,readTimeoutShort  )
+		sender.SendReq(bo, req, loc.Region, readTimeoutShort)
 	}
 	return nil
 }

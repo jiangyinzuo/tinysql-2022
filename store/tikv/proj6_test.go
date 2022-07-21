@@ -4,11 +4,11 @@ import (
 	"context"
 	"math/rand"
 
-	"github.com/pingcap/failpoint"
-	"github.com/pingcap/tidb/parser/terror"
 	"github.com/pingcap-incubator/tinykv/proto/pkg/kvrpcpb"
 	. "github.com/pingcap/check"
+	"github.com/pingcap/failpoint"
 	"github.com/pingcap/tidb/kv"
+	"github.com/pingcap/tidb/parser/terror"
 	"github.com/pingcap/tidb/store/mockstore/mocktikv"
 	"github.com/pingcap/tidb/store/tikv/tikvrpc"
 )
@@ -16,7 +16,7 @@ import (
 type testProj6Suite struct {
 	OneByOneSuite
 	cluster *mocktikv.Cluster
-	store *tikvStore
+	store   *tikvStore
 }
 
 var _ = Suite(&testProj6Suite{})
@@ -475,7 +475,6 @@ func (s *testProj6Suite) TestGetResolveLockCommit(c *C) {
 
 	s.mustUnLock(c, k2)
 }
-
 
 func (s *testProj6Suite) TestGetResolveLockRollback(c *C) {
 	txn, committer := s.preparePrewritedTxn(c, "a", map[string]string{
