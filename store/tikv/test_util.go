@@ -19,7 +19,7 @@ import (
 
 	"github.com/google/uuid"
 	pb "github.com/pingcap-incubator/tinykv/proto/pkg/kvrpcpb"
-	"github.com/pingcap-incubator/tinykv/scheduler/client"
+	pd "github.com/pingcap-incubator/tinykv/scheduler/client"
 	"github.com/pingcap/errors"
 	"github.com/pingcap/failpoint"
 	"github.com/pingcap/tidb/kv"
@@ -142,7 +142,9 @@ func (c *mockTwoPhaseCommitter) execute(_ context.Context) (err error) {
 		if err != nil {
 			return err
 		}
-		sender.SendReq(bo, req, loc.Region, readTimeoutShort)
+		if _, err := sender.SendReq(bo, req, loc.Region, readTimeoutShort); err != nil {
+			return err
+		}
 	}
 
 	// commit
@@ -158,7 +160,9 @@ func (c *mockTwoPhaseCommitter) execute(_ context.Context) (err error) {
 		if err != nil {
 			return err
 		}
-		sender.SendReq(bo, req, loc.Region, readTimeoutShort)
+		if _, err := sender.SendReq(bo, req, loc.Region, readTimeoutShort); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-
+#!/bin/bash
 # set is used to set the environment variables.
 #  -e: exit immediately when a command returning a non-zero exit code.
 #  -u: treat unset variables as an error.
